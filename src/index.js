@@ -3,7 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import * as Msal from "@azure/msal-browser"; // if using CDN, 'Msal' will be available in global scope
 
+// Configuration object constructed.
+const config = {
+    auth: {
+        clientId: 'd1a7989e-58b0-4bdd-aed1-8659eaa5bd9e'
+    }
+};
+
+// create PublicClientApplication instance
+const publicClientApplication = new Msal.PublicClientApplication(config);
 ReactDOM.render(
   <React.StrictMode>
     <App />
