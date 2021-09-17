@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Routes from './Routes/Routes';
-import {PublicClientApplication} from '@azure/msal-browser'
+import { PublicClientApplication } from '@azure/msal-browser'
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 
-const App=()=> {
+const App = () => {
+  const [accountId, setAccountId] = useState('')
   const config = {
     auth: {
       clientId: 'd1a7989e-58b0-4bdd-aed1-8659eaa5bd9e',
@@ -19,12 +21,9 @@ const App=()=> {
   const myMsal = new PublicClientApplication(config);
 
   React.useEffect(() => {
-
-    let accountId = "";
-
     myMsal.loginPopup(loginRequest)
       .then(function (loginResponse) {
-        accountId = loginResponse.account.homeAccountId;
+        setAccountId(loginResponse.account.homeAccountId);
         // Display signed-in user content, call API, etc.
       }).catch(function (error) {
         //login failure
@@ -32,22 +31,24 @@ const App=()=> {
       });
   }, [])
 
-  const handleLogOut = () =>{
-   
-  // you can select which account application should sign out
-  //  const logoutRequest = {
-  //     account: myMsal.getAccountByHomeId(homeAccountId),
-  //     mainWindowRedirectUri: "your_app_main_window_redirect_uri"
-  // }
-  
-  //  myMsal.logoutPopup(logoutRequest);
+  const handleLogOut = () => {
+
+    // you can select which account application should sign out
+    const logoutRequest = {
+      account: myMsal.getAccountByHomeId(accountId),
+      mainWindowRedirectUri: 'https://transactionsolutions.netlify.app'
+    }
+
+    myMsal.logoutPopup(logoutRequest);
   }
   return (
     <>
-    <button onClick={handleLogOut}>Log Out</button>
-      <Routes />
+      <button onClick={handleLogOut}>Log Out</button>
+      <AuthenticatedTemplate>
+        <Routes />
+      </AuthenticatedTemplate >
     </>
-  );
+      );
 }
 
-export default App;
+      export default App;
