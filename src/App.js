@@ -41,8 +41,20 @@ const App = () => {
 
     myMsal.logoutPopup(logoutRequest);
   }
+
+  const handleLogin = ()=>{
+    myMsal.loginPopup(loginRequest)
+      .then(function (loginResponse) {
+        setAccountId(loginResponse.account.homeAccountId);
+        // Display signed-in user content, call API, etc.
+      }).catch(function (error) {
+        //login failure
+        console.log(error);
+      });
+  }
   return (
     <>
+      <button onClick={handleLogin}>Log in</button>
       <button onClick={handleLogOut}>Log Out</button>
       <AuthenticatedTemplate>
         <Routes />
